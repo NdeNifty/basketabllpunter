@@ -1,3 +1,4 @@
+//page.js
 import Image from 'next/image'
 import Header from './components/header';
 import { Inter } from 'next/font/google'

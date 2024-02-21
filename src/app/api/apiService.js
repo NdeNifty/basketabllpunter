@@ -2,10 +2,11 @@
 import axios from 'axios';
 
 
-const BASE_URL = process.env.BACKEND_URL;
-console.log(process.env.BACKEND_URL)
+const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+console.log(BASE_URL)
 
 export const login = async (userData) => {
+    console.log(userData)
   try {
     const response = await axios.post(`${BASE_URL}/auth/login`, userData);
     return response.data;

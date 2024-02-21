@@ -2,6 +2,33 @@
 import React from "react";
 
 const Signup = () => {
+  const router = useRouter(); 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const handleSignup = async () => {
+    try {
+      const userData = { email, password };
+      const result = await signup(userData);
+  
+      if (result && result.token) {
+        console.log('Logged in successfully');
+        console.log(result);
+  
+        // Close the modal
+        onClose();
+  
+        // Store the token in a secure way (e.g., HttpOnly cookie)
+        Cookies.set('token', result.token, { secure: true, sameSite: 'strict' });
+  
+        // Redirect to dashboard
+        router.push('/dashboard');
+      } else {
+        console.log('Error Signingnn up');
+      }
+    } catch (error) {
+      console.error('SignUp failed:', error);
+    }
+  };
   const handleModalClose = () => {
     // Call the onClose prop to close the modal
     onClose();
@@ -45,6 +72,7 @@ const Signup = () => {
                 <input
                   type="text"
                   id="LastName"
+                  
                   name="last_name"
                   className="mt-1 w-full  p-2  rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                   placeholder="Enter last name"

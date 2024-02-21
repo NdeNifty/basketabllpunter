@@ -1,26 +1,39 @@
+//components/auth/login.js
 "use client";
 import React, {useState} from "react";
-import { login } from "@/app/apiService";
+import { login } from "@/app/api/apiService";
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 const Login = ({ onClose }) => {
+  const router = useRouter(); 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const handleLogin = async () => {
     try {
-      // Call the login function from the API service
       const userData = { email, password };
       const result = await login(userData);
-
-      // Handle the result as needed
-      console.log('Login successful:', result);
-
-      // Close the modal
-      onClose();
+  
+      if (result && result.token) {
+        console.log('Logged in successfully');
+        console.log(result);
+  
+        // Close the modal
+        onClose();
+  
+        // Store the token in a secure way (e.g., HttpOnly cookie)
+        Cookies.set('token', result.token, { secure: true, sameSite: 'strict' });
+  
+        // Redirect to dashboard
+        router.push('/dashboard');
+      } else {
+        console.log('Error logging in');
+      }
     } catch (error) {
-      // Handle errors
       console.error('Login failed:', error);
     }
   };
+  
 
 
   const handleModalClose = () => {
@@ -55,6 +68,8 @@ const Login = ({ onClose }) => {
                 type="email"
                 className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
                 placeholder="Enter email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
 
               <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
@@ -86,6 +101,8 @@ const Login = ({ onClose }) => {
                 type="password"
                 className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
                 placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
 
               <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
@@ -116,6 +133,10 @@ const Login = ({ onClose }) => {
           <button
             type="submit"
             className="block w-full rounded-lg bg-indigo-600 px-5 py-3 text-sm font-medium text-white"
+            onClick={(e) => {
+              e.preventDefault();
+              handleLogin();
+            }}
           >
             Sign in
           </button>

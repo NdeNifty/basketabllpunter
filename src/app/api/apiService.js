@@ -15,3 +15,16 @@ export const login = async (userData) => {
     throw error;
   }
 };
+
+export const signup = async (userData) => {
+  console.log(userData)
+try {
+  const response = await axios.post(`${BASE_URL}/auth/signup`, userData);
+  console.log(response.data)
+  return response.data;
+} catch (error) {
+  console.log('The error is ', error)
+  throw error;
+}
+};
+

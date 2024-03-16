@@ -5,8 +5,8 @@ const User = require('../models/user');
 const authController = {
   signup: async (req, res) => {
     try {
-      const { email, password } = req.body;
-      const newUser = new User({ email, password });
+      const { email, password, firstname, lastname } = req.body;
+      const newUser = new User({ email, password, firstname, lastname });
       await newUser.save();
       res.status(201).json({ message: 'User created successfully' });
     } catch (error) {

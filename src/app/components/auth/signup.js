@@ -1,32 +1,40 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
+import { signup } from "@/app/api/apiService";
+import { useRouter } from "next/navigation";
+
 
 const Signup = () => {
-  const router = useRouter(); 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstname, setFirstname] =useState("");
+  const [lastname, setLastname] = useState("");
+
   const handleSignup = async () => {
+    
+    
     try {
-      const userData = { email, password };
+      
+      const userData = { firstname, lastname, email, password };
       const result = await signup(userData);
-  
-      if (result && result.token) {
-        console.log('Logged in successfully');
+
+      if (result) {
+        router.push("/dashboard");
+        console.log("Signed up successfully.....");
         console.log(result);
-  
+
         // Close the modal
+
         onClose();
-  
-        // Store the token in a secure way (e.g., HttpOnly cookie)
-        Cookies.set('token', result.token, { secure: true, sameSite: 'strict' });
-  
+
         // Redirect to dashboard
-        router.push('/dashboard');
+        router.push("/dashboard");
       } else {
-        console.log('Error Signingnn up');
+        console.log("Error Creating user");
       }
     } catch (error) {
-      console.error('SignUp failed:', error);
+      console.error("SignUp failed:", error);
     }
   };
   const handleModalClose = () => {
@@ -46,7 +54,10 @@ const Signup = () => {
               Create an account to access basketbal betting tips for over 400
               different leagues and thousands of games
             </p>
-            <form className="mt-2 grid grid-cols-6 gap-6 space-y-4 rounded-lg p-4 shadow-lg">
+            <form 
+            method="post"
+            
+            className="mt-2 grid grid-cols-6 gap-6 space-y-4 rounded-lg p-4 shadow-lg">
               <div className="col-span-6 sm:col-span-3 mt-4">
                 <label className="block text-sm font-medium text-gray-700">
                   First Name
@@ -58,34 +69,29 @@ const Signup = () => {
                   name="first_name"
                   className="mt-1 w-full  p-2  rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                   placeholder="Enter first name"
+                  onChange={(e) => setFirstname(e.target.value)}
                 />
               </div>
 
               <div className="col-span-6 sm:col-span-3">
-                <label
-                 
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label className="block text-sm font-medium text-gray-700">
                   Last Name
                 </label>
 
                 <input
                   type="text"
                   id="LastName"
-                  
                   name="last_name"
                   className="mt-1 w-full  p-2  rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                   placeholder="Enter last name"
+                  onChange={(e) => setLastname(e.target.value)}
                 />
               </div>
 
               <div className="col-span-6">
-                <label
-                 
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  {" "}
-                  Email{" "}
+                <label className="block text-sm font-medium text-gray-700">
+                  
+                  Email
                 </label>
 
                 <input
@@ -94,15 +100,14 @@ const Signup = () => {
                   name="email"
                   className="mt-1 w-full rounded-md border-gray-200 p-2 pe-12 bg-white text-sm text-gray-700 shadow-sm"
                   placeholder="Enter email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
 
               <div className="col-span-6 sm:col-span-3">
-                <label
+                <label className="block text-sm font-medium text-gray-700">
                   
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  {" "}
                   Password{" "}
                 </label>
 
@@ -112,14 +117,13 @@ const Signup = () => {
                   name="password"
                   className="mt-1 w-full rounded-md p-2 pe-12 border-gray-200 bg-white  text-gray-700 shadow-sm"
                   placeholder="Enter password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
 
               <div className="col-span-6 sm:col-span-3">
-                <label
-                 
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label className="block text-sm font-medium text-gray-700">
                   Password Confirmation
                 </label>
 
@@ -166,8 +170,12 @@ const Signup = () => {
               <div className="col-span-6 sm:col-span-6">
                 <div className="flex w-full">
                   <div className="flex-grow">
-                    <button className="w-full shrink-0 rounded-md border border-blue-600 bg-blue-600 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500">
+                    <button className="w-full shrink-0 rounded-md border border-blue-600 bg-blue-600 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500"
+                     onClick={handleSignup}
+                    type="submit"
+                    >
                       Create an account
+
                     </button>
                   </div>
                   <div className="flex-grow">
@@ -196,3 +204,6 @@ const Signup = () => {
   );
 };
 export default Signup;
+
+
+
